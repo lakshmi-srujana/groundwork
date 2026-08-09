@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="public/seal.png" alt="Groundwork Seal" width="120" />
+  <img src="groundwork_landingpage.jpeg" alt="Groundwork Seal" width="120" />
 
   # 🌿 GROUNDWORK
   ### AI-Verified Disaster Micro-Relief Network & Immutable Public Ledger

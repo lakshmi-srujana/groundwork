@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ShieldCheck, UserCheck, ArrowRight, Lock, Mail, ChevronLeft } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -12,12 +13,51 @@ export default function SigninPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (role === "coordinator") {
-      router.push("/dashboard/coordinator");
-    } else {
-      router.push("/dashboard/volunteer");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) throw authError;
+
+      if (data.user) {
+        // First try user_metadata (always available — set during signup)
+        const metaRole = data.user.user_metadata?.role;
+
+        if (metaRole === "coordinator" || metaRole === "volunteer") {
+          window.location.href = metaRole === "coordinator"
+            ? "/dashboard/coordinator"
+            : "/dashboard/volunteer";
+          return;
+        }
+
+        // Fallback: query profiles table
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", data.user.id)
+          .single();
+
+        const dest = profile?.role === "coordinator"
+          ? "/dashboard/coordinator"
+          : "/dashboard/volunteer";
+
+        window.location.href = dest;
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,6 +78,7 @@ export default function SigninPage() {
               src="/seal.png"
               alt="Groundwork Seal"
               fill
+              sizes="56px"
               className="object-contain"
             />
           </div>

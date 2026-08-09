@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShieldCheck, UserCheck, ArrowRight, Lock, MapPin, Mail, User, ChevronLeft } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 function SignupFormContent() {
   const searchParams = useSearchParams();
@@ -28,12 +29,77 @@ function SignupFormContent() {
     accessKey: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (role === "coordinator") {
-      router.push("/dashboard/coordinator");
-    } else {
-      router.push("/dashboard/volunteer");
+    setLoading(true);
+    setError(null);
+
+    // Supabase requires password >= 6 characters
+    if (formData.accessKey.length < 6) {
+      setError("Access Key must be at least 6 characters long.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const aapdaId = role === "volunteer"
+        ? `AM-${Math.floor(1000 + Math.random() * 9000)}`
+        : null;
+      const ward = role === "volunteer" ? "Ward 7" : null;
+
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.accessKey,
+        options: {
+          data: {
+            role,
+            full_name: formData.fullName,
+            district: formData.district,
+            ward,
+            aapda_mitra_id: aapdaId,
+          },
+        },
+      });
+
+      if (authError) throw authError;
+
+      if (data.user) {
+        // Create profile via server-side API route (uses service role key — bypasses RLS)
+        const profileRes = await fetch("/api/create-profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: data.user.id,
+            role,
+            full_name: formData.fullName,
+            district: formData.district,
+            ward,
+            aapda_mitra_id: aapdaId,
+          }),
+        });
+
+        if (!profileRes.ok) {
+          const errBody = await profileRes.json();
+          throw new Error(errBody.error || "Failed to create profile");
+        }
+
+        if (role === "coordinator") {
+          router.push("/dashboard/coordinator");
+        } else {
+          router.push("/dashboard/volunteer");
+        }
+      } else {
+        // Email confirmation required — tell the user to check email
+        setError("Account created! Check your email to confirm before signing in.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "An error occurred during sign up");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,6 +119,7 @@ function SignupFormContent() {
             src="/seal.png"
             alt="Groundwork Seal"
             fill
+            sizes="56px"
             className="object-contain"
           />
         </div>
@@ -168,29 +235,33 @@ function SignupFormContent() {
 
           <div>
             <label className="block text-[#6B7C4A] font-medium mb-1.5">
-              Access Key / PIN (Optional for Demo)
+              Access Key / PIN (Password)
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 absolute left-3 top-3 text-[#6B7C4A]" />
               <input
                 type="password"
+                required
+                minLength={6}
                 value={formData.accessKey}
                 onChange={(e) => setFormData({ ...formData, accessKey: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#87A878]/40 bg-white text-[#2D4A2D] focus:outline-none focus:border-[#2D4A2D]"
-                placeholder="••••••••"
+                placeholder="Min 6 characters"
               />
             </div>
+            <p className="text-[10px] text-[#6B7C4A] mt-1 ml-1">Must be at least 6 characters long</p>
           </div>
 
           <button
             type="submit"
-            className={`w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-[0.99] ${
+            disabled={loading}
+            className={`w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-[0.99] disabled:opacity-50 ${
               role === "coordinator"
                 ? "bg-[#C4973A] hover:bg-[#B0852E] text-white"
                 : "bg-[#2D4A2D] hover:bg-[#1E331E] text-white"
             }`}
           >
-            Enter {role === "coordinator" ? "Coordinator Console" : "Volunteer Portal"}
+            {loading ? "Signing up..." : `Enter ${role === "coordinator" ? "Coordinator Console" : "Volunteer Portal"}`}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

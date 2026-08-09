@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
+@theme {
+  --color-sage: #87A878;
+  --color-olive: #6B7C4A;
+  --color-forest: #2D4A2D;
+  --color-cream: #F5F0E8;
+  --color-gold: #C4973A;
+  --color-wood: #8B5E3C;
+
+  --font-serif: var(--font-dm-serif), serif;
+  --font-sans: var(--font-dm-sans), sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #F5F0E8;
+  --foreground: #2D4A2D;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F5F0E8;
+  color: #2D4A2D;
+  font-family: var(--font-dm-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .font-serif {
+  font-family: var(--font-dm-serif), Georgia, serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F0E8;
+}
+::-webkit-scrollbar-thumb {
+  background: #87A878;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6B7C4A;
+}
+
+/* Groundwork subtle card styling */
+.groundwork-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(135, 168, 120, 0.25);
+  box-shadow: 0 4px 20px -2px rgba(45, 74, 45, 0.05), 0 2px 6px -1px rgba(45, 74, 45, 0.03);
+  border-radius: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.groundwork-card:hover {
+  border-color: rgba(135, 168, 120, 0.45);
+  box-shadow: 0 8px 30px -4px rgba(45, 74, 45, 0.08), 0 4px 10px -2px rgba(45, 74, 45, 0.04);
+}
+
+/* Groundwork Primary Button */
+.btn-gold {
+  background-color: #C4973A;
+  color: #F5F0E8;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold:hover {
+  background-color: #b0852e;
+  box-shadow: 0 4px 12px rgba(196, 151, 58, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
 }

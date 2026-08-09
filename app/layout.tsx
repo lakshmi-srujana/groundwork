@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const dmSerif = DM_Serif_Display({
   weight: ["400"],
@@ -31,7 +32,7 @@ export default function RootLayout({
       className={`${dmSerif.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-[#F5F0E8] text-[#2D4A2D] flex flex-col font-sans">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

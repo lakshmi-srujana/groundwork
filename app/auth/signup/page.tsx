@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ShieldCheck, UserCheck, ArrowRight, Lock, MapPin, Mail, User, ChevronLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -23,9 +22,9 @@ function SignupFormContent() {
   }, [searchParams]);
 
   const [formData, setFormData] = useState({
-    fullName: role === "coordinator" ? "Dr. Aris Thorne" : "Meera R.",
-    email: role === "coordinator" ? "aris.thorne@groundwork.org" : "meera.r@groundwork.org",
-    district: role === "coordinator" ? "Wayanad Sector Command" : "Meppadi Ward 7",
+    fullName: "",
+    email: "",
+    district: "",
     accessKey: "",
   });
 
@@ -87,12 +86,11 @@ function SignupFormContent() {
         }
 
         if (role === "coordinator") {
-          router.push("/dashboard/coordinator");
+          window.location.href = "/dashboard/coordinator";
         } else {
-          router.push("/dashboard/volunteer");
+          window.location.href = "/dashboard/volunteer";
         }
       } else {
-        // Email confirmation required — tell the user to check email
         setError("Account created! Check your email to confirm before signing in.");
       }
     } catch (err: any) {
@@ -161,13 +159,19 @@ function SignupFormContent() {
           </button>
         </div>
 
+        {error && (
+          <div className="p-3 rounded-xl bg-rose-100 border border-rose-300 text-rose-800 text-xs font-medium">
+            {error}
+          </div>
+        )}
+
         {/* Informational Role Note */}
         <div className="text-xs p-3.5 rounded-xl bg-[#2D4A2D]/5 border border-[#87A878]/30 flex items-start gap-2.5">
           {role === "coordinator" ? (
             <>
               <ShieldCheck className="w-4 h-4 text-[#C4973A] shrink-0 mt-0.5" />
               <p className="text-[#2D4A2D]">
-                Coordinators oversee regional dispatch, review AI image verifications, and deploy field tasks across 350 disaster-prone districts.
+                Coordinators oversee regional dispatch, review AI image verifications, and deploy field tasks across disaster-prone districts.
               </p>
             </>
           ) : (
@@ -194,7 +198,7 @@ function SignupFormContent() {
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#87A878]/40 bg-white text-[#2D4A2D] focus:outline-none focus:border-[#2D4A2D]"
-                placeholder="Enter full name"
+                placeholder={role === "coordinator" ? "Dr. Aris Thorne" : "Meera R."}
               />
             </div>
           </div>
@@ -211,7 +215,7 @@ function SignupFormContent() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#87A878]/40 bg-white text-[#2D4A2D] focus:outline-none focus:border-[#2D4A2D]"
-                placeholder="name@groundwork.org"
+                placeholder={role === "coordinator" ? "aris.thorne@groundwork.org" : "meera.r@groundwork.org"}
               />
             </div>
           </div>
@@ -228,7 +232,7 @@ function SignupFormContent() {
                 value={formData.district}
                 onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#87A878]/40 bg-white text-[#2D4A2D] focus:outline-none focus:border-[#2D4A2D]"
-                placeholder="e.g. Wayanad, Kerala"
+                placeholder={role === "coordinator" ? "Wayanad Sector Command" : "Meppadi Ward 7"}
               />
             </div>
           </div>
@@ -257,8 +261,8 @@ function SignupFormContent() {
             disabled={loading}
             className={`w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-[0.99] disabled:opacity-50 ${
               role === "coordinator"
-                ? "bg-[#C4973A] hover:bg-[#B0852E] text-white"
-                : "bg-[#2D4A2D] hover:bg-[#1E331E] text-white"
+                ? "bg-[#C4973A] hover:bg-[#B0852E]"
+                : "bg-[#2D4A2D] hover:bg-[#1E331E]"
             }`}
           >
             {loading ? "Signing up..." : `Enter ${role === "coordinator" ? "Coordinator Console" : "Volunteer Portal"}`}
@@ -266,28 +270,11 @@ function SignupFormContent() {
           </button>
         </form>
 
-        {/* Quick Demo Access Bar */}
-        <div className="pt-4 border-t border-[#87A878]/30 flex flex-col gap-2 text-center text-xs">
-          <p className="text-[#6B7C4A]">Direct Demo Shortcuts:</p>
-          <div className="flex gap-2">
-            <Link
-              href="/dashboard/coordinator"
-              className="flex-1 py-2 px-2 rounded-lg bg-[#C4973A]/15 text-[#C4973A] hover:bg-[#C4973A]/25 border border-[#C4973A]/30 font-semibold transition-colors text-[11px]"
-            >
-              Open Coordinator Matrix →
-            </Link>
-            <Link
-              href="/dashboard/volunteer"
-              className="flex-1 py-2 px-2 rounded-lg bg-[#2D4A2D]/10 text-[#2D4A2D] hover:bg-[#2D4A2D]/20 border border-[#2D4A2D]/30 font-semibold transition-colors text-[11px]"
-            >
-              Open Volunteer Portal →
-            </Link>
-          </div>
-          <div className="mt-2">
-            <Link href="/auth/signin" className="text-[#6B7C4A] hover:underline font-medium">
-              Already registered? Sign in here →
-            </Link>
-          </div>
+        {/* Clean Auth Navigation — Demo Shortcuts Removed */}
+        <div className="pt-4 border-t border-[#87A878]/30 text-center text-xs">
+          <Link href="/auth/signin" className="text-[#6B7C4A] hover:underline font-medium">
+            Already registered? Sign in here →
+          </Link>
         </div>
       </div>
     </div>

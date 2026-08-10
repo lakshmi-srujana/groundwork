@@ -43,13 +43,12 @@ export const CTACards: React.FC<CTACardsProps> = ({ isVisible = true }) => {
       <motion.div
         variants={cardVariants}
         whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.25)" }}
-        className="flex-1 rounded-2xl p-8 bg-[#F5F0E8] text-[#2D4A2D] cursor-pointer flex flex-col justify-between transition-shadow border border-[#87A878]/20"
+        className="flex-1 rounded-2xl p-8 bg-[#F5F0E8] text-[#2D4A2D] flex flex-col justify-between transition-shadow border border-[#87A878]/20"
       >
-        <Link href="/auth/signup?role=volunteer" className="flex flex-col h-full justify-between gap-6 group">
-          <div>
-            <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col h-full justify-between gap-6">
+          <Link href="/auth/signup?role=volunteer" className="block group space-y-4">
+            <div className="flex items-center justify-between">
               <span className="p-3 rounded-xl bg-[#87A878]/15 text-[#2D4A2D]">
-                {/* Humanitarian Hand / Person SVG */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="26"
@@ -70,38 +69,40 @@ export const CTACards: React.FC<CTACardsProps> = ({ isVisible = true }) => {
               </span>
             </div>
 
-            <h3 className="font-serif text-2xl md:text-3xl font-normal text-[#2D4A2D] mb-2 group-hover:text-[#6B7C4A] transition-colors">
+            <h3 className="font-serif text-2xl md:text-3xl font-normal text-[#2D4A2D] group-hover:text-[#6B7C4A] transition-colors">
               Join as Volunteer
             </h3>
 
-            <p className="font-sans text-sm text-[#6B7C4A] leading-relaxed mb-4">
+            <p className="font-sans text-sm text-[#6B7C4A] leading-relaxed">
               Log tasks. Capture proof. Build your verified record.
             </p>
 
             <p className="font-sans text-xs text-[#6B7C4A]/80 bg-[#2D4A2D]/5 p-3 rounded-lg border border-[#6B7C4A]/15 leading-relaxed">
               Volunteers see their tasks, submit photo proof, and build a blockchain-verified record.
             </p>
-          </div>
+          </Link>
 
           <div className="pt-4 border-t border-[#87A878]/30 flex items-center justify-between">
-            <span className="font-sans text-xs text-[#87A878] font-medium hover:underline">
+            <Link
+              href="/auth/signin?role=volunteer"
+              className="font-sans text-xs text-[#6B7C4A] hover:text-[#2D4A2D] font-semibold hover:underline flex items-center gap-1 transition-colors"
+            >
               Already have an account? Sign in →
-            </span>
+            </Link>
           </div>
-        </Link>
+        </div>
       </motion.div>
 
       {/* Coordinator Card */}
       <motion.div
         variants={cardVariants}
         whileHover={{ y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.35)" }}
-        className="flex-1 rounded-2xl p-8 bg-[#C4973A] text-[#F5F0E8] cursor-pointer flex flex-col justify-between transition-shadow border border-[#C4973A]/40"
+        className="flex-1 rounded-2xl p-8 bg-[#C4973A] text-[#F5F0E8] flex flex-col justify-between transition-shadow border border-[#C4973A]/40"
       >
-        <Link href="/auth/signup?role=coordinator" className="flex flex-col h-full justify-between gap-6 group">
-          <div>
-            <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col h-full justify-between gap-6">
+          <Link href="/auth/signup?role=coordinator" className="block group space-y-4">
+            <div className="flex items-center justify-between">
               <span className="p-3 rounded-xl bg-[#F5F0E8]/15 text-[#F5F0E8]">
-                {/* Clipboard / Organization SVG */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="26"
@@ -123,25 +124,28 @@ export const CTACards: React.FC<CTACardsProps> = ({ isVisible = true }) => {
               </span>
             </div>
 
-            <h3 className="font-serif text-2xl md:text-3xl font-normal text-[#F5F0E8] mb-2 group-hover:text-white transition-colors">
+            <h3 className="font-serif text-2xl md:text-3xl font-normal text-[#F5F0E8] group-hover:text-white transition-colors">
               I’m a Coordinator
             </h3>
 
-            <p className="font-sans text-sm text-[#F5F0E8]/85 leading-relaxed mb-4">
+            <p className="font-sans text-sm text-[#F5F0E8]/85 leading-relaxed">
               Manage volunteers. Verify impact. Trust the roster.
             </p>
 
             <p className="font-sans text-xs text-[#F5F0E8]/75 bg-[#F5F0E8]/10 p-3 rounded-lg border border-[#F5F0E8]/20 leading-relaxed">
               Coordinators deploy field units, audit proof submissions, and orchestrate regional micro-relief.
             </p>
-          </div>
+          </Link>
 
           <div className="pt-4 border-t border-[#F5F0E8]/30 flex items-center justify-between">
-            <span className="font-sans text-xs text-[#F5F0E8]/80 font-medium hover:underline">
+            <Link
+              href="/auth/signin?role=coordinator"
+              className="font-sans text-xs text-[#F5F0E8] hover:text-white font-semibold hover:underline flex items-center gap-1 transition-colors"
+            >
               Already have an account? Sign in →
-            </span>
+            </Link>
           </div>
-        </Link>
+        </div>
       </motion.div>
     </motion.div>
   );

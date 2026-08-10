@@ -74,7 +74,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
         setProfile(null);
         if (event === "SIGNED_OUT") {
-          router.push("/");
+          const isAuthPage = typeof window !== "undefined" && window.location.pathname.startsWith("/auth");
+          if (!isAuthPage) {
+            router.push("/");
+          }
         }
       }
       if (mounted) setLoading(false);

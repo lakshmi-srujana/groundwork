@@ -6,6 +6,20 @@
   <img src="images/1.png" alt="Groundwork" width="900"/>
 </p>
 
+<p align="center">
+
+[📄 Project Documentation](https://drive.google.com/file/d/1UoG1LArfNRfvr1cjcWWQVf5AfBpZ_DqG/view?usp=sharing) &nbsp;&nbsp; | &nbsp;&nbsp;
+[🎥 Project Demo Video](https://youtu.be/x9AJqq4lV78) &nbsp;&nbsp; | &nbsp;&nbsp;
+[🚀 Live Deployment](https://groundwork-mauve-five.vercel.app/)
+[📊 PPT Link](https://canva.link/15r6oj1chwzd783)
+
+<br><br>
+
+⚠️ <strong>Deployment Notice:</strong><br>
+The Vercel deployment is currently not fully functional. The application is best experienced through the local development environment, where the complete backend, AI verification, IPFS, and blockchain workflow is configured. The deployed Vercel version may have limitations due to deployment/environment configuration and should not be considered the final production deployment.
+
+</p>
+
 
 
 
